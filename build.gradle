@@ -49,6 +49,10 @@ tasks.named('openApiGenerate') {
     configOptions = [interfaceOnly: "true"]
 }
 
+tasks.named('compileJava') {
+    dependsOn tasks.named('openApiGenerate')
+}
+
 sourceSets {
     main {
         java {
