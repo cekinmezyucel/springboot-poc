@@ -11,12 +11,9 @@ import org.testcontainers.utility.DockerImageName;
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-public class BaseIntegrationTest {
+public abstract class BaseIntegrationTest {
   static final PostgreSQLContainer<?> postgres =
-      new PostgreSQLContainer<>(DockerImageName.parse("postgres:16-alpine"))
-          .withDatabaseName("testdb")
-          .withUsername("test")
-          .withPassword("test");
+      new PostgreSQLContainer<>(DockerImageName.parse("postgres:16-alpine"));
 
   static {
     postgres.start();
