@@ -40,17 +40,4 @@ public class AccountsApiImpl implements AccountsApi {
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
-    @Override
-    public ResponseEntity<Void> linkAccountToUser(Integer accountId, Integer userId) {
-        accountService.linkAccountToUser(accountId, userId);
-        userService.linkUserToAccount(userId, accountId);
-        return ResponseEntity.ok().build();
-    }
-
-    @Override
-    public ResponseEntity<Void> unlinkAccountFromUser(Integer accountId, Integer userId) {
-        accountService.unlinkAccountFromUser(accountId, userId);
-        userService.unlinkUserFromAccount(userId, accountId);
-        return ResponseEntity.ok().build();
-    }
 }

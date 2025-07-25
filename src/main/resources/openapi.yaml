@@ -78,46 +78,6 @@ paths:
         "400":
           description: Invalid input
           content: {}
-  /accounts/{accountId}/users/{userId}:
-    post:
-      summary: Link an account to a user
-      operationId: linkAccountToUser
-      parameters:
-        - name: accountId
-          in: path
-          required: true
-          schema:
-            type: integer
-        - name: userId
-          in: path
-          required: true
-          schema:
-            type: integer
-      responses:
-        "200":
-          description: Account linked to user
-        "404":
-          description: Account or user not found
-    delete:
-      summary: Unlink an account from a user
-      operationId: unlinkAccountFromUser
-      parameters:
-        - name: accountId
-          in: path
-          required: true
-          schema:
-            type: integer
-        - name: userId
-          in: path
-          required: true
-          schema:
-            type: integer
-      responses:
-        "200":
-          description: Account unlinked from user
-        "404":
-          description: Account or user not found
-
   /users/{userId}/accounts/{accountId}:
     post:
       summary: Link a user to an account
