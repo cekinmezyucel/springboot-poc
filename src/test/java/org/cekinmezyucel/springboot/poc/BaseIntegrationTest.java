@@ -12,20 +12,21 @@ import org.testcontainers.utility.DockerImageName;
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 public class BaseIntegrationTest {
-    static final PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>(DockerImageName.parse("postgres:16-alpine"))
-            .withDatabaseName("testdb")
-            .withUsername("test")
-            .withPassword("test");
+  static final PostgreSQLContainer<?> postgres =
+      new PostgreSQLContainer<>(DockerImageName.parse("postgres:16-alpine"))
+          .withDatabaseName("testdb")
+          .withUsername("test")
+          .withPassword("test");
 
-    static {
-        postgres.start();
-    }
+  static {
+    postgres.start();
+  }
 
-    @DynamicPropertySource
-    static void configureProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", postgres::getJdbcUrl);
-        registry.add("spring.datasource.username", postgres::getUsername);
-        registry.add("spring.datasource.password", postgres::getPassword);
-        registry.add("spring.datasource.driver-class-name", postgres::getDriverClassName);
-    }
+  @DynamicPropertySource
+  static void configureProperties(DynamicPropertyRegistry registry) {
+    registry.add("spring.datasource.url", postgres::getJdbcUrl);
+    registry.add("spring.datasource.username", postgres::getUsername);
+    registry.add("spring.datasource.password", postgres::getPassword);
+    registry.add("spring.datasource.driver-class-name", postgres::getDriverClassName);
+  }
 }
