@@ -1,5 +1,6 @@
 package org.cekinmezyucel.springboot.poc.api;
 
+import org.cekinmezyucel.springboot.poc.BaseIntegrationTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -17,9 +18,7 @@ import org.cekinmezyucel.springboot.poc.model.User;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@SpringBootTest
-@AutoConfigureMockMvc
-class UsersApiIntegrationTest {
+class UsersApiIntegrationTest extends BaseIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
 

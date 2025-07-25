@@ -2,21 +2,19 @@ package org.cekinmezyucel.springboot.poc.service;
 
 import java.util.List;
 
+import org.cekinmezyucel.springboot.poc.BaseUnitTest;
 import org.cekinmezyucel.springboot.poc.model.User;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import org.mockito.junit.jupiter.MockitoExtension;
 
-@ExtendWith(MockitoExtension.class)
-class UserServiceTest {
+class UserServiceTest extends BaseUnitTest{
     @Mock
     private AccountService accountService;
 

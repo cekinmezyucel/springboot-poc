@@ -1,23 +1,24 @@
 package org.cekinmezyucel.springboot.poc.api;
 
-import org.junit.jupiter.api.Assertions;
+import org.cekinmezyucel.springboot.poc.BaseIntegrationTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class HealthApiIntegrationTest {
+@AutoConfigureMockMvc
+class HealthApiIntegrationTest extends BaseIntegrationTest {
 
     @Autowired
-    private TestRestTemplate restTemplate;
+    private MockMvc mockMvc;
 
     @Test
-    void healthEndpointShouldReturn200() {
-        ResponseEntity<Void> response = restTemplate.getForEntity("/health", Void.class);
-        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
-        
+    void healthEndpointShouldReturn200() throws Exception {
+        mockMvc.perform(get("/health")
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
     }
 }
