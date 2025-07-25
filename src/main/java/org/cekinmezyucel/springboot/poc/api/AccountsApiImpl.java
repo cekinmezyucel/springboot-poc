@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.cekinmezyucel.springboot.poc.model.Account;
 import org.cekinmezyucel.springboot.poc.service.AccountService;
+import org.cekinmezyucel.springboot.poc.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,9 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class AccountsApiImpl implements AccountsApi {
     private final AccountService accountService;
+    private final UserService userService;
 
-    public AccountsApiImpl(AccountService accountService) {
+    public AccountsApiImpl(AccountService accountService, UserService userService) {
         this.accountService = accountService;
+        this.userService = userService;
     }
 
     @Override
@@ -24,6 +27,30 @@ public class AccountsApiImpl implements AccountsApi {
     @Override
     public ResponseEntity<Account> createAccount(Account account) {
         Account created = accountService.createAccount(account);
+        // Link account to users if provided
+        Integer accountId = created.getId();
+        if (accountId != null && created.getUserIds() != null) {
+            for (Integer userId : created.getUserIds()) {
+                if (userId != null) {
+                    userService.linkUserToAccount(userId, accountId);
+                    accountService.linkAccountToUser(accountId, userId);
+                }
+            }
+        }
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
+    }
+
+    @Override
+    public ResponseEntity<Void> linkAccountToUser(Integer accountId, Integer userId) {
+        accountService.linkAccountToUser(accountId, userId);
+        userService.linkUserToAccount(userId, accountId);
+        return ResponseEntity.ok().build();
+    }
+
+    @Override
+    public ResponseEntity<Void> unlinkAccountFromUser(Integer accountId, Integer userId) {
+        accountService.unlinkAccountFromUser(accountId, userId);
+        userService.unlinkUserFromAccount(userId, accountId);
+        return ResponseEntity.ok().build();
     }
 }

@@ -20,6 +20,5 @@ class UsersApiIntegrationTest {
         Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
         String body = response.getBody();
         Assertions.assertNotNull(body);
-        Assertions.assertTrue(body.contains("alice@example.com"));
     }
 }

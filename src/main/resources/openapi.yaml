@@ -78,6 +78,85 @@ paths:
         "400":
           description: Invalid input
           content: {}
+  /accounts/{accountId}/users/{userId}:
+    post:
+      summary: Link an account to a user
+      operationId: linkAccountToUser
+      parameters:
+        - name: accountId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Account linked to user
+        "404":
+          description: Account or user not found
+    delete:
+      summary: Unlink an account from a user
+      operationId: unlinkAccountFromUser
+      parameters:
+        - name: accountId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Account unlinked from user
+        "404":
+          description: Account or user not found
+
+  /users/{userId}/accounts/{accountId}:
+    post:
+      summary: Link a user to an account
+      operationId: linkUserToAccount
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: accountId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: User linked to account
+        "404":
+          description: User or account not found
+    delete:
+      summary: Unlink a user from an account
+      operationId: unlinkUserFromAccount
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: accountId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: User unlinked from account
+        "404":
+          description: User or account not found
 components:
   schemas:
     User:
@@ -91,6 +170,10 @@ components:
           type: string
         surname:
           type: string
+        accountIds:
+          type: array
+          items:
+            type: integer
     Account:
       type: object
       properties:
@@ -100,3 +183,7 @@ components:
           type: string
         industry:
           type: string
+        userIds:
+          type: array
+          items:
+            type: integer
