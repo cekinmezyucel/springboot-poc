@@ -1,6 +1,6 @@
 openapi: 3.0.1
 info:
-  title: Health API
+  title: Health, User, and Account API
   version: 1.0.0
 paths:
   /health:
@@ -14,3 +14,51 @@ paths:
         "500":
           description: Application is unhealthy
           content: {}
+  /users:
+    get:
+      summary: Get all users
+      operationId: getUsers
+      responses:
+        "200":
+          description: List of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
+  /accounts:
+    get:
+      summary: Get all accounts
+      operationId: getAccounts
+      responses:
+        "200":
+          description: List of accounts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Account"
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        email:
+          type: string
+        name:
+          type: string
+        surname:
+          type: string
+    Account:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        industry:
+          type: string
