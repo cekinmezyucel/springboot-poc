@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
-    private AccountService accountService;
+    private final AccountService accountService;
 
     public UserService(AccountService accountService) {
         this.accountService = accountService;
