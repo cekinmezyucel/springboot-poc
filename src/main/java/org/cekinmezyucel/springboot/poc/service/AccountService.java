@@ -1,52 +1,41 @@
 package org.cekinmezyucel.springboot.poc.service;
 
-
 import java.util.List;
-import java.util.Optional;
 
 import org.cekinmezyucel.springboot.poc.entity.AccountEntity;
-import org.cekinmezyucel.springboot.poc.entity.UserEntity;
+import org.cekinmezyucel.springboot.poc.model.Account;
 import org.cekinmezyucel.springboot.poc.repository.AccountRepository;
-import org.cekinmezyucel.springboot.poc.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AccountService {
     private final AccountRepository accountRepository;
-    private final UserRepository userRepository;
 
-    public AccountService(AccountRepository accountRepository, UserRepository userRepository) {
+    public AccountService(AccountRepository accountRepository) {
         this.accountRepository = accountRepository;
-        this.userRepository = userRepository;
     }
 
-    public List<AccountEntity> getAccounts() {
-        return accountRepository.findAll();
+    public List<Account> getAccounts() {
+        return accountRepository.findAll().stream().map(AccountService::toModel).toList();
     }
 
-    public AccountEntity createAccount(AccountEntity account) {
-        return accountRepository.save(account);
+    public Account createAccount(Account account) {
+        return toModel(accountRepository.save(toEntity(account)));
     }
 
-    public void linkAccountToUser(Integer accountId, Integer userId) {
-        Optional<AccountEntity> accountOpt = accountRepository.findById(accountId);
-        Optional<UserEntity> userOpt = userRepository.findById(userId);
-        if (accountOpt.isPresent() && userOpt.isPresent()) {
-            AccountEntity account = accountOpt.get();
-            UserEntity user = userOpt.get();
-            account.getUsers().add(user);
-            accountRepository.save(account);
-        }
+    private static Account toModel(AccountEntity accountEntity) {
+        Account model = new Account();
+        model.setId(accountEntity.getId());
+        model.setName(accountEntity.getName());
+        model.setIndustry(accountEntity.getType());
+        return model;
     }
 
-    public void unlinkAccountFromUser(Integer accountId, Integer userId) {
-        Optional<AccountEntity> accountOpt = accountRepository.findById(accountId);
-        Optional<UserEntity> userOpt = userRepository.findById(userId);
-        if (accountOpt.isPresent() && userOpt.isPresent()) {
-            AccountEntity account = accountOpt.get();
-            UserEntity user = userOpt.get();
-            account.getUsers().remove(user);
-            accountRepository.save(account);
-        }
+    public AccountEntity toEntity(Account model) {
+        AccountEntity entity = new AccountEntity();
+        entity.setId(model.getId());
+        entity.setName(model.getName());
+        entity.setType(model.getIndustry());
+        return entity;
     }
 }

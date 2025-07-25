@@ -2,9 +2,11 @@ package org.cekinmezyucel.springboot.poc.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.cekinmezyucel.springboot.poc.entity.AccountEntity;
 import org.cekinmezyucel.springboot.poc.entity.UserEntity;
+import org.cekinmezyucel.springboot.poc.model.User;
 import org.cekinmezyucel.springboot.poc.repository.AccountRepository;
 import org.cekinmezyucel.springboot.poc.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -19,24 +21,30 @@ public class UserService {
         this.accountRepository = accountRepository;
     }
 
-    public List<UserEntity> getUsers() {
-        return userRepository.findAll();
+    private static User toModel(UserEntity entity) {
+        User model = new User();
+        model.setId(entity.getId());
+        model.setEmail(entity.getEmail());
+        model.setName(entity.getName());
+        model.setSurname(entity.getSurname());
+        return model;
     }
 
-    public UserEntity createUser(UserEntity user) {
-        return userRepository.save(user);
+    private static UserEntity toEntity(User model) {
+        UserEntity entity = new UserEntity();
+        entity.setId(model.getId());
+        entity.setEmail(model.getEmail());
+        entity.setName(model.getName());
+        entity.setSurname(model.getSurname());
+        return entity;
     }
 
-    public UserEntity createUserWithMemberships(UserEntity user, List<Integer> accountIds) {
-        UserEntity created = createUser(user);
-        if (created.getId() != null && accountIds != null) {
-            for (Integer accountId : accountIds) {
-                if (accountId != null) {
-                    linkUserToAccountWithMembership(created.getId(), accountId);
-                }
-            }
-        }
-        return created;
+    public List<User> getUsers() {
+        return userRepository.findAll().stream().map(UserService::toModel).toList();
+    }
+
+    public User createUser(User user) {
+        return toModel(userRepository.save(toEntity(user)));
     }
 
     public void linkUserToAccountWithMembership(Integer userId, Integer accountId) {
