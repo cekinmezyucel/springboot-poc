@@ -22,11 +22,13 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter'
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'io.swagger.core.v3:swagger-annotations:2.2.21'
 	implementation 'jakarta.validation:jakarta.validation-api:3.1.1'
 	implementation 'org.openapitools:jackson-databind-nullable:0.2.6'
 	implementation 'org.postgresql:postgresql:42.7.3'
-	implementation 'org.flywaydb:flyway-core:10.11.0'
+
+	runtimeOnly 'org.flywaydb:flyway-database-postgresql:11.10.4'
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.testcontainers:junit-jupiter:1.19.7'
@@ -40,23 +42,23 @@ tasks.named('test') {
 }
 
 tasks.named('openApiGenerate') {
-    generatorName = "spring"
-    inputSpec = "$rootDir/src/main/resources/openapi.yaml"
-    outputDir = "$buildDir/generated/openapi"
-    apiPackage = "org.cekinmezyucel.springboot.poc.api"
-    modelPackage = "org.cekinmezyucel.springboot.poc.model"
-    invokerPackage = "org.cekinmezyucel.springboot.poc.invoker"
-    configOptions = [interfaceOnly: "true", useJakartaEe: "true"]
+	generatorName = "spring"
+	inputSpec = "$rootDir/src/main/resources/openapi.yaml"
+	outputDir = "$buildDir/generated/openapi"
+	apiPackage = "org.cekinmezyucel.springboot.poc.api"
+	modelPackage = "org.cekinmezyucel.springboot.poc.model"
+	invokerPackage = "org.cekinmezyucel.springboot.poc.invoker"
+	configOptions = [interfaceOnly: "true", useJakartaEe: "true"]
 }
 
 tasks.named('compileJava') {
-    dependsOn tasks.named('openApiGenerate')
+	dependsOn tasks.named('openApiGenerate')
 }
 
 sourceSets {
-    main {
-        java {
-            srcDir "$buildDir/generated/openapi/src/main/java"
-        }
-    }
+	main {
+		java {
+			srcDir "$buildDir/generated/openapi/src/main/java"
+		}
+	}
 }
