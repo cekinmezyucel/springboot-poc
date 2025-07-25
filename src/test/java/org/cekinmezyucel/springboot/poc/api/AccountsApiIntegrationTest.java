@@ -1,5 +1,7 @@
 package org.cekinmezyucel.springboot.poc.api;
 
+import org.cekinmezyucel.springboot.poc.model.Account;
+import org.cekinmezyucel.springboot.poc.model.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -12,49 +14,47 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import org.cekinmezyucel.springboot.poc.model.User;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class UsersApiIntegrationTest {
+class AccountsApiIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
-    void testCreateUser() throws Exception {
-        User user = new User();
-        user.setEmail("test@example.com");
-        user.setName("Test");
-        user.setSurname("User");
-        String userJson = objectMapper.writeValueAsString(user);
-        mockMvc.perform(post("/users")
+    void testCreateAccount() throws Exception {
+        Account account = new Account();
+        account.setName("AccountTest");
+        account.setIndustry("Finance");
+        String accountJson = objectMapper.writeValueAsString(account);
+        mockMvc.perform(post("/accounts")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(userJson))
+                .content(accountJson))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.email").value("test@example.com"));
+                .andExpect(jsonPath("$.name").value("AccountTest"));
     }
 
     @Test
-    void testGetUsers() throws Exception {
-        mockMvc.perform(get("/users"))
+    void testGetAccounts() throws Exception {
+        mockMvc.perform(get("/accounts"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
     }
 
     @Test
-    void testLinkAndUnlinkUserToAccount() throws Exception {
+    void testLinkAndUnlinkAccountToUser() throws Exception {
         User user = new User();
-        user.setEmail("link@example.com");
-        user.setName("Link");
-        user.setSurname("User");
+        user.setEmail("accountuser@example.com");
+        user.setName("AccountUser");
+        user.setSurname("Test");
         String userJson = objectMapper.writeValueAsString(user);
-        org.cekinmezyucel.springboot.poc.model.Account account = new org.cekinmezyucel.springboot.poc.model.Account();
-        account.setName("Account1");
+        Account account = new Account();
+        account.setName("Account2");
         account.setIndustry("Tech");
         String accountJson = objectMapper.writeValueAsString(account);
         String userResponse = mockMvc.perform(post("/users")
@@ -69,11 +69,11 @@ class UsersApiIntegrationTest {
                 .andReturn().getResponse().getContentAsString();
         JsonNode accountNode = objectMapper.readTree(accountResponse);
         int accountId = accountNode.get("id").asInt();
-        // Link user to account
-        mockMvc.perform(post("/users/" + userId + "/accounts/" + accountId))
+        // Link account to user
+        mockMvc.perform(post("/accounts/" + accountId + "/users/" + userId))
                 .andExpect(status().isOk());
-        // Unlink user from account
-        mockMvc.perform(delete("/users/" + userId + "/accounts/" + accountId))
+        // Unlink account from user
+        mockMvc.perform(delete("/accounts/" + accountId + "/users/" + userId))
                 .andExpect(status().isOk());
     }
 }
