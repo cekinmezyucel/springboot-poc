@@ -30,7 +30,7 @@
            "type": "java",
            "name": "Spring Boot (local profile)",
            "request": "launch",
-           "mainClass": "org.cekinmezyucel.springboot.poc.Application",
+           "mainClass": "com.cekinmezyucel.springboot.poc.Application",
            "env": {
              "SPRING_PROFILES_ACTIVE": "local"
            }

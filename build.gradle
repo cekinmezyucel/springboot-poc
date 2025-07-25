@@ -6,7 +6,7 @@ plugins {
 	id 'com.diffplug.spotless' version '6.25.0'
 }
 
-group = 'org.cekinmezyucel'
+group = 'com.cekinmezyucel'
 version = '0.0.1-SNAPSHOT'
 
 java {
@@ -46,9 +46,9 @@ tasks.named('openApiGenerate') {
 	generatorName = "spring"
 	inputSpec = "$rootDir/src/main/resources/openapi.yaml"
 	outputDir = "$buildDir/generated/openapi"
-	apiPackage = "org.cekinmezyucel.springboot.poc.api"
-	modelPackage = "org.cekinmezyucel.springboot.poc.model"
-	invokerPackage = "org.cekinmezyucel.springboot.poc.invoker"
+	apiPackage = "com.cekinmezyucel.springboot.poc.api"
+	modelPackage = "com.cekinmezyucel.springboot.poc.model"
+	invokerPackage = "com.cekinmezyucel.springboot.poc.invoker"
 	configOptions = [interfaceOnly: "true", useJakartaEe: "true"]
 }
 
