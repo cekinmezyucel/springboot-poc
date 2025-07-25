@@ -12,6 +12,12 @@ import org.testcontainers.utility.DockerImageName;
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 public abstract class BaseIntegrationTest {
+
+  /**
+   * @see <a
+   *     href="https://testcontainers.com/guides/testcontainers-container-lifecycle/">Testcontainers
+   *     container lifecycle management using JUnit 5</a>
+   */
   static final PostgreSQLContainer<?> postgres =
       new PostgreSQLContainer<>(DockerImageName.parse("postgres:16-alpine"));
 
