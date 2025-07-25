@@ -23,16 +23,16 @@ class UserServiceTest extends BaseUnitTest {
   @Test
   void testLinkUserToAccountWithMembership() {
     UserEntity user = new UserEntity();
-    user.setId(1);
+    user.setId(1L);
     user.setAccounts(new HashSet<>());
     AccountEntity account = new AccountEntity();
-    account.setId(42);
+    account.setId(42L);
     account.setUsers(new HashSet<>());
-    when(userRepository.findById(1)).thenReturn(Optional.of(user));
-    when(accountRepository.findById(42)).thenReturn(Optional.of(account));
+    when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+    when(accountRepository.findById(42L)).thenReturn(Optional.of(account));
     when(userRepository.save(user)).thenReturn(user);
     when(accountRepository.save(account)).thenReturn(account);
-    userService.linkUserToAccountWithMembership(1, 42);
+    userService.linkUserToAccountWithMembership(1L, 42L);
     assertTrue(user.getAccounts().contains(account));
     assertTrue(account.getUsers().contains(user));
   }
@@ -40,18 +40,18 @@ class UserServiceTest extends BaseUnitTest {
   @Test
   void testUnlinkUserFromAccountWithMembership() {
     UserEntity user = new UserEntity();
-    user.setId(1);
+    user.setId(1L);
     AccountEntity account = new AccountEntity();
-    account.setId(42);
+    account.setId(42L);
     user.setAccounts(new HashSet<>());
     user.getAccounts().add(account);
     account.setUsers(new HashSet<>());
     account.getUsers().add(user);
-    when(userRepository.findById(1)).thenReturn(Optional.of(user));
-    when(accountRepository.findById(42)).thenReturn(Optional.of(account));
+    when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+    when(accountRepository.findById(42L)).thenReturn(Optional.of(account));
     when(userRepository.save(user)).thenReturn(user);
     when(accountRepository.save(account)).thenReturn(account);
-    userService.unlinkUserFromAccountWithMembership(1, 42);
+    userService.unlinkUserFromAccountWithMembership(1L, 42L);
     assertFalse(user.getAccounts().contains(account));
     assertFalse(account.getUsers().contains(user));
   }

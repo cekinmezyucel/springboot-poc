@@ -16,7 +16,7 @@ import java.util.Set;
 public class UserEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Integer id;
+  private Long id;
 
   private String email;
   private String name;
@@ -30,11 +30,11 @@ public class UserEntity {
   private Set<AccountEntity> accounts = new HashSet<>();
 
   // Getters and setters
-  public Integer getId() {
+  public Long getId() {
     return id;
   }
 
-  public void setId(Integer id) {
+  public void setId(Long id) {
     this.id = id;
   }
 

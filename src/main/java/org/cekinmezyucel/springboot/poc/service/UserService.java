@@ -45,7 +45,7 @@ public class UserService {
     return toModel(userRepository.save(toEntity(user)));
   }
 
-  public void linkUserToAccountWithMembership(Integer userId, Integer accountId) {
+  public void linkUserToAccountWithMembership(Long userId, Long accountId) {
     linkUserToAccount(userId, accountId);
     // Bidirectional link
     Optional<AccountEntity> accountOpt = accountRepository.findById(accountId);
@@ -58,7 +58,7 @@ public class UserService {
     }
   }
 
-  public void unlinkUserFromAccountWithMembership(Integer userId, Integer accountId) {
+  public void unlinkUserFromAccountWithMembership(Long userId, Long accountId) {
     unlinkUserFromAccount(userId, accountId);
     // Bidirectional unlink
     Optional<AccountEntity> accountOpt = accountRepository.findById(accountId);
@@ -71,7 +71,7 @@ public class UserService {
     }
   }
 
-  public void linkUserToAccount(Integer userId, Integer accountId) {
+  public void linkUserToAccount(Long userId, Long accountId) {
     Optional<UserEntity> userOpt = userRepository.findById(userId);
     Optional<AccountEntity> accountOpt = accountRepository.findById(accountId);
     if (userOpt.isPresent() && accountOpt.isPresent()) {
@@ -82,7 +82,7 @@ public class UserService {
     }
   }
 
-  public void unlinkUserFromAccount(Integer userId, Integer accountId) {
+  public void unlinkUserFromAccount(Long userId, Long accountId) {
     Optional<UserEntity> userOpt = userRepository.findById(userId);
     Optional<AccountEntity> accountOpt = accountRepository.findById(accountId);
     if (userOpt.isPresent() && accountOpt.isPresent()) {

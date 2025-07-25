@@ -26,13 +26,13 @@ public class UsersApiImpl implements UsersApi {
   }
 
   @Override
-  public ResponseEntity<Void> linkUserToAccount(Integer userId, Integer accountId) {
+  public ResponseEntity<Void> linkUserToAccount(Long userId, Long accountId) {
     userService.linkUserToAccountWithMembership(userId, accountId);
     return ResponseEntity.ok().build();
   }
 
   @Override
-  public ResponseEntity<Void> unlinkUserFromAccount(Integer userId, Integer accountId) {
+  public ResponseEntity<Void> unlinkUserFromAccount(Long userId, Long accountId) {
     userService.unlinkUserFromAccountWithMembership(userId, accountId);
     return ResponseEntity.ok().build();
   }
