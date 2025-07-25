@@ -27,6 +27,25 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/User"
+    post:
+      summary: Create a new user
+      operationId: createUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        "201":
+          description: User created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "400":
+          description: Invalid input
+          content: {}
   /accounts:
     get:
       summary: Get all accounts
@@ -40,6 +59,25 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Account"
+    post:
+      summary: Create a new account
+      operationId: createAccount
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Account"
+      responses:
+        "201":
+          description: Account created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Account"
+        "400":
+          description: Invalid input
+          content: {}
 components:
   schemas:
     User:
