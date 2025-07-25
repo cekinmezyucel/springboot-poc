@@ -19,9 +19,6 @@ public class AccountService {
 
     public Account createAccount(Account account) {
         account.setId(accountIdSeq++);
-        if (account.getUserIds() == null) {
-            account.setUserIds(new ArrayList<>());
-        }
         accounts.put(account.getId(), account);
         return account;
     }
