@@ -1,0 +1,16 @@
+openapi: 3.0.1
+info:
+  title: Health API
+  version: 1.0.0
+paths:
+  /health:
+    get:
+      summary: Get application health status
+      operationId: getHealth
+      responses:
+        "200":
+          description: Application is healthy
+          content: {}
+        "500":
+          description: Application is unhealthy
+          content: {}
