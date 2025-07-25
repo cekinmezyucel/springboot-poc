@@ -1,11 +1,13 @@
 package com.cekinmezyucel.springboot.poc.api;
 
-import com.cekinmezyucel.springboot.poc.model.Account;
-import com.cekinmezyucel.springboot.poc.service.AccountService;
 import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.cekinmezyucel.springboot.poc.model.Account;
+import com.cekinmezyucel.springboot.poc.service.AccountService;
 
 @RestController
 public class AccountsApiImpl implements AccountsApi {

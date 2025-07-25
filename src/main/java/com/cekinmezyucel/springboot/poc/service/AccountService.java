@@ -1,10 +1,12 @@
 package com.cekinmezyucel.springboot.poc.service;
 
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
 import com.cekinmezyucel.springboot.poc.entity.AccountEntity;
 import com.cekinmezyucel.springboot.poc.model.Account;
 import com.cekinmezyucel.springboot.poc.repository.AccountRepository;
-import java.util.List;
-import org.springframework.stereotype.Service;
 
 @Service
 public class AccountService {

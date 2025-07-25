@@ -1,11 +1,13 @@
 package com.cekinmezyucel.springboot.poc.api;
 
-import com.cekinmezyucel.springboot.poc.model.User;
-import com.cekinmezyucel.springboot.poc.service.UserService;
 import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.cekinmezyucel.springboot.poc.model.User;
+import com.cekinmezyucel.springboot.poc.service.UserService;
 
 @RestController
 public class UsersApiImpl implements UsersApi {

@@ -1,19 +1,21 @@
 package com.cekinmezyucel.springboot.poc.service;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.when;
+import java.util.HashSet;
+import java.util.Optional;
+
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 
 import com.cekinmezyucel.springboot.poc.BaseUnitTest;
 import com.cekinmezyucel.springboot.poc.entity.AccountEntity;
 import com.cekinmezyucel.springboot.poc.entity.UserEntity;
 import com.cekinmezyucel.springboot.poc.repository.AccountRepository;
 import com.cekinmezyucel.springboot.poc.repository.UserRepository;
-import java.util.HashSet;
-import java.util.Optional;
-import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.when;
 
 class UserServiceTest extends BaseUnitTest {
   @Mock private UserRepository userRepository;

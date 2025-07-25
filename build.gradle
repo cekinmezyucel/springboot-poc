@@ -69,5 +69,7 @@ spotless {
 	java {
 		target 'src/**/*.java'
 		googleJavaFormat()
+		removeUnusedImports()
+		importOrderFile('import-order.txt')
 	}
 }
