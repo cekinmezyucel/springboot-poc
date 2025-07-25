@@ -1,5 +1,6 @@
 package org.cekinmezyucel.springboot.poc.api;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,9 +17,9 @@ class UsersApiIntegrationTest {
     @Test
     void usersEndpointShouldReturn200AndList() {
         ResponseEntity<String> response = restTemplate.getForEntity("/users", String.class);
-        org.junit.jupiter.api.Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
+        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
         String body = response.getBody();
-        org.junit.jupiter.api.Assertions.assertNotNull(body);
-        org.junit.jupiter.api.Assertions.assertTrue(body.contains("alice@example.com"));
+        Assertions.assertNotNull(body);
+        Assertions.assertTrue(body.contains("alice@example.com"));
     }
 }
