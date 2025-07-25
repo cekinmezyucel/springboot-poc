@@ -1,28 +1,38 @@
 package org.cekinmezyucel.springboot.poc.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 
-import org.cekinmezyucel.springboot.poc.model.User;
+import org.cekinmezyucel.springboot.poc.entity.AccountEntity;
+import org.cekinmezyucel.springboot.poc.entity.UserEntity;
+import org.cekinmezyucel.springboot.poc.repository.AccountRepository;
+import org.cekinmezyucel.springboot.poc.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
-    private final AccountService accountService;
+    private final UserRepository userRepository;
+    private final AccountRepository accountRepository;
 
-    public UserService(AccountService accountService) {
-        this.accountService = accountService;
+    public UserService(UserRepository userRepository, AccountRepository accountRepository) {
+        this.userRepository = userRepository;
+        this.accountRepository = accountRepository;
     }
 
-    public User createUserWithMemberships(User user) {
-        User created = createUser(user);
-        Integer userId = created.getId();
-        if (userId != null && created.getAccountIds() != null) {
-            for (Integer accountId : created.getAccountIds()) {
+    public List<UserEntity> getUsers() {
+        return userRepository.findAll();
+    }
+
+    public UserEntity createUser(UserEntity user) {
+        return userRepository.save(user);
+    }
+
+    public UserEntity createUserWithMemberships(UserEntity user, List<Integer> accountIds) {
+        UserEntity created = createUser(user);
+        if (created.getId() != null && accountIds != null) {
+            for (Integer accountId : accountIds) {
                 if (accountId != null) {
-                    linkUserToAccountWithMembership(userId, accountId);
+                    linkUserToAccountWithMembership(created.getId(), accountId);
                 }
             }
         }
@@ -31,44 +41,49 @@ public class UserService {
 
     public void linkUserToAccountWithMembership(Integer userId, Integer accountId) {
         linkUserToAccount(userId, accountId);
-        if (accountService != null) {
-            accountService.linkAccountToUser(accountId, userId);
+        // Bidirectional link
+        Optional<AccountEntity> accountOpt = accountRepository.findById(accountId);
+        Optional<UserEntity> userOpt = userRepository.findById(userId);
+        if (accountOpt.isPresent() && userOpt.isPresent()) {
+            AccountEntity account = accountOpt.get();
+            UserEntity user = userOpt.get();
+            account.getUsers().add(user);
+            accountRepository.save(account);
         }
     }
 
     public void unlinkUserFromAccountWithMembership(Integer userId, Integer accountId) {
         unlinkUserFromAccount(userId, accountId);
-        if (accountService != null) {
-            accountService.unlinkAccountFromUser(accountId, userId);
-        }
-    }
-    private final Map<Integer, User> users = new HashMap<>();
-    private int userIdSeq = 1;
-
-    public List<User> getUsers() {
-        return new ArrayList<>(users.values());
-    }
-
-    public User createUser(User user) {
-        user.setId(userIdSeq++);
-        if (user.getAccountIds() == null) {
-            user.setAccountIds(new ArrayList<>());
-        }
-        users.put(user.getId(), user);
-        return user;
-    }
-
-    public void linkUserToAccount(int userId, int accountId) {
-        User user = users.get(userId);
-        if (user != null && !user.getAccountIds().contains(accountId)) {
-            user.getAccountIds().add(accountId);
+        // Bidirectional unlink
+        Optional<AccountEntity> accountOpt = accountRepository.findById(accountId);
+        Optional<UserEntity> userOpt = userRepository.findById(userId);
+        if (accountOpt.isPresent() && userOpt.isPresent()) {
+            AccountEntity account = accountOpt.get();
+            UserEntity user = userOpt.get();
+            account.getUsers().remove(user);
+            accountRepository.save(account);
         }
     }
 
-    public void unlinkUserFromAccount(int userId, int accountId) {
-        User user = users.get(userId);
-        if (user != null) {
-            user.getAccountIds().remove(Integer.valueOf(accountId));
+    public void linkUserToAccount(Integer userId, Integer accountId) {
+        Optional<UserEntity> userOpt = userRepository.findById(userId);
+        Optional<AccountEntity> accountOpt = accountRepository.findById(accountId);
+        if (userOpt.isPresent() && accountOpt.isPresent()) {
+            UserEntity user = userOpt.get();
+            AccountEntity account = accountOpt.get();
+            user.getAccounts().add(account);
+            userRepository.save(user);
+        }
+    }
+
+    public void unlinkUserFromAccount(Integer userId, Integer accountId) {
+        Optional<UserEntity> userOpt = userRepository.findById(userId);
+        Optional<AccountEntity> accountOpt = accountRepository.findById(accountId);
+        if (userOpt.isPresent() && accountOpt.isPresent()) {
+            UserEntity user = userOpt.get();
+            AccountEntity account = accountOpt.get();
+            user.getAccounts().remove(account);
+            userRepository.save(user);
         }
     }
 }

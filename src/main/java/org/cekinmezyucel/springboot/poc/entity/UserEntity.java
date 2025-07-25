@@ -1,16 +1,15 @@
 package org.cekinmezyucel.springboot.poc.entity;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
-import jakarta.persistence.CollectionTable;
-import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -24,10 +23,13 @@ public class UserEntity {
     private String name;
     private String surname;
 
-    @ElementCollection
-    @CollectionTable(name = "user_accounts", joinColumns = @JoinColumn(name = "user_id"))
-    @Column(name = "account_id")
-    private List<Integer> accountIds = new ArrayList<>();
+    @ManyToMany
+    @JoinTable(
+        name = "user_accounts",
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "account_id")
+    )
+    private Set<AccountEntity> accounts = new HashSet<>();
 
     // Getters and setters
     public Integer getId() { return id; }
@@ -38,6 +40,6 @@ public class UserEntity {
     public void setName(String name) { this.name = name; }
     public String getSurname() { return surname; }
     public void setSurname(String surname) { this.surname = surname; }
-    public List<Integer> getAccountIds() { return accountIds; }
-    public void setAccountIds(List<Integer> accountIds) { this.accountIds = accountIds; }
+    public Set<AccountEntity> getAccounts() { return accounts; }
+    public void setAccounts(Set<AccountEntity> accounts) { this.accounts = accounts; }
 }

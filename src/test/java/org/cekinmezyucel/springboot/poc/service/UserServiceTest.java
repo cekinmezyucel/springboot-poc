@@ -1,9 +1,14 @@
 package org.cekinmezyucel.springboot.poc.service;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 
 import org.cekinmezyucel.springboot.poc.BaseUnitTest;
-import org.cekinmezyucel.springboot.poc.model.User;
+import org.cekinmezyucel.springboot.poc.entity.AccountEntity;
+import org.cekinmezyucel.springboot.poc.entity.UserEntity;
+import org.cekinmezyucel.springboot.poc.repository.AccountRepository;
+import org.cekinmezyucel.springboot.poc.repository.UserRepository;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -11,74 +16,93 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-class UserServiceTest extends BaseUnitTest{
+class UserServiceTest extends BaseUnitTest {
     @Mock
-    private AccountService accountService;
-
+    private UserRepository userRepository;
+    @Mock
+    private AccountRepository accountRepository;
     @InjectMocks
     private UserService userService;
 
     @Test
     void testCreateUser() {
-        User user = new User();
+        UserEntity user = new UserEntity();
         user.setEmail("test@example.com");
         user.setName("Test");
         user.setSurname("User");
-        User created = userService.createUser(user);
+        UserEntity savedUser = new UserEntity();
+        savedUser.setId(1);
+        savedUser.setEmail("test@example.com");
+        savedUser.setName("Test");
+        savedUser.setSurname("User");
+        savedUser.setAccounts(new HashSet<>());
+        when(userRepository.save(user)).thenReturn(savedUser);
+        UserEntity created = userService.createUser(user);
         assertNotNull(created.getId());
         assertEquals("test@example.com", created.getEmail());
         assertEquals("Test", created.getName());
         assertEquals("User", created.getSurname());
-        assertNotNull(created.getAccountIds());
+        assertNotNull(created.getAccounts());
     }
 
     @Test
     void testLinkUserToAccountWithMembership() {
-        User user = new User();
-        user.setEmail("test@example.com");
-        user.setName("Test");
-        user.setSurname("User");
-        User created = userService.createUser(user);
-        Integer userId = created.getId();
-        assertNotNull(userId);
-        int accountId = 42;
-        userService.linkUserToAccountWithMembership(userId, accountId);
-        assertTrue(created.getAccountIds().contains(accountId));
-        verify(accountService, times(1)).linkAccountToUser(accountId, userId);
+        UserEntity user = new UserEntity();
+        user.setId(1);
+        user.setAccounts(new HashSet<>());
+        AccountEntity account = new AccountEntity();
+        account.setId(42);
+        account.setUsers(new HashSet<>());
+        when(userRepository.findById(1)).thenReturn(Optional.of(user));
+        when(accountRepository.findById(42)).thenReturn(Optional.of(account));
+        when(userRepository.save(user)).thenReturn(user);
+        when(accountRepository.save(account)).thenReturn(account);
+        userService.linkUserToAccountWithMembership(1, 42);
+        assertTrue(user.getAccounts().contains(account));
+        assertTrue(account.getUsers().contains(user));
     }
 
     @Test
     void testUnlinkUserFromAccountWithMembership() {
-        User user = new User();
-        user.setEmail("test@example.com");
-        user.setName("Test");
-        user.setSurname("User");
-        User created = userService.createUser(user);
-        Integer userId = created.getId();
-        assertNotNull(userId);
-        int accountId = 42;
-        userService.linkUserToAccountWithMembership(userId, accountId);
-        userService.unlinkUserFromAccountWithMembership(userId, accountId);
-        assertFalse(created.getAccountIds().contains(accountId));
-        verify(accountService, times(1)).unlinkAccountFromUser(accountId, userId);
+        UserEntity user = new UserEntity();
+        user.setId(1);
+        AccountEntity account = new AccountEntity();
+        account.setId(42);
+        user.setAccounts(new HashSet<>());
+        user.getAccounts().add(account);
+        account.setUsers(new HashSet<>());
+        account.getUsers().add(user);
+        when(userRepository.findById(1)).thenReturn(Optional.of(user));
+        when(accountRepository.findById(42)).thenReturn(Optional.of(account));
+        when(userRepository.save(user)).thenReturn(user);
+        when(accountRepository.save(account)).thenReturn(account);
+        userService.unlinkUserFromAccountWithMembership(1, 42);
+        assertFalse(user.getAccounts().contains(account));
+        assertFalse(account.getUsers().contains(user));
     }
 
     @Test
     void testCreateUserWithMemberships() {
-        User user = new User();
-        user.setEmail("test@example.com");
-        user.setName("Test");
-        user.setSurname("User");
-        user.setAccountIds(List.of(1, 2));
-        User created = userService.createUserWithMemberships(user);
-        assertTrue(created.getAccountIds().contains(1));
-        assertTrue(created.getAccountIds().contains(2));
-        Integer userId = created.getId();
-        assertNotNull(userId);
-        verify(accountService, times(1)).linkAccountToUser(1, userId);
-        verify(accountService, times(1)).linkAccountToUser(2, userId);
+        UserEntity user = new UserEntity();
+        user.setId(1);
+        user.setAccounts(new HashSet<>());
+        AccountEntity account1 = new AccountEntity();
+        account1.setId(2);
+        account1.setUsers(new HashSet<>());
+        AccountEntity account2 = new AccountEntity();
+        account2.setId(3);
+        account2.setUsers(new HashSet<>());
+        when(userRepository.save(user)).thenReturn(user);
+        when(userRepository.findById(1)).thenReturn(Optional.of(user));
+        when(accountRepository.findById(2)).thenReturn(Optional.of(account1));
+        when(accountRepository.findById(3)).thenReturn(Optional.of(account2));
+        when(accountRepository.save(account1)).thenReturn(account1);
+        when(accountRepository.save(account2)).thenReturn(account2);
+        List<Integer> accountIds = List.of(2, 3);
+        UserEntity created = userService.createUserWithMemberships(user, accountIds);
+        assertTrue(created.getAccounts().contains(account1));
+        assertTrue(created.getAccounts().contains(account2));
     }
 }
