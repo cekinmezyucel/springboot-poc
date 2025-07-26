@@ -2,6 +2,8 @@ package com.cekinmezyucel.springboot.poc.api;
 
 import java.util.List;
 
+import jakarta.annotation.security.RolesAllowed;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,6 +20,7 @@ public class UsersApiImpl implements UsersApi {
   }
 
   @Override
+  @RolesAllowed("poc.users.read")
   public ResponseEntity<List<User>> getUsers() {
     return ResponseEntity.ok(userService.getUsers());
   }

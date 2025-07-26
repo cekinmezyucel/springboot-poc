@@ -3,6 +3,7 @@ package com.cekinmezyucel.springboot.poc.api;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -26,6 +27,16 @@ class UsersApiIntegrationTest extends BaseIntegrationTest {
   private final ObjectMapper objectMapper = new ObjectMapper();
 
   @Test
+  void testGetUsers() throws Exception {
+    mockMvc
+        .perform(
+            get("/users")
+                .with(jwt().authorities(new SimpleGrantedAuthority("ROLE_poc.users.read"))))
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+  }
+
+  @Test
   void testCreateUser() throws Exception {
     User user = new User();
     user.setEmail("test@example.com");
@@ -37,14 +48,6 @@ class UsersApiIntegrationTest extends BaseIntegrationTest {
             post("/users").with(jwt()).contentType(MediaType.APPLICATION_JSON).content(userJson))
         .andExpect(status().isCreated())
         .andExpect(jsonPath("$.email").value("test@example.com"));
-  }
-
-  @Test
-  void testGetUsers() throws Exception {
-    mockMvc
-        .perform(get("/users").with(jwt()))
-        .andExpect(status().isOk())
-        .andExpect(content().contentType(MediaType.APPLICATION_JSON));
   }
 
   @Test
