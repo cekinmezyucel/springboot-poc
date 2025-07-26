@@ -23,6 +23,14 @@ public abstract class BaseIntegrationTest {
 
   static {
     postgres.start();
+    Runtime.getRuntime()
+        .addShutdownHook(
+            new Thread(
+                () -> {
+                  if (postgres.isRunning()) {
+                    postgres.stop();
+                  }
+                }));
   }
 
   @DynamicPropertySource
