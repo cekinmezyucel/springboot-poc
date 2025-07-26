@@ -12,6 +12,7 @@ import com.cekinmezyucel.springboot.poc.BaseIntegrationTest;
 import com.cekinmezyucel.springboot.poc.model.Account;
 import com.cekinmezyucel.springboot.poc.model.User;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -32,7 +33,8 @@ class UsersApiIntegrationTest extends BaseIntegrationTest {
     user.setSurname("User");
     String userJson = objectMapper.writeValueAsString(user);
     mockMvc
-        .perform(post("/users").contentType(MediaType.APPLICATION_JSON).content(userJson))
+        .perform(
+            post("/users").with(jwt()).contentType(MediaType.APPLICATION_JSON).content(userJson))
         .andExpect(status().isCreated())
         .andExpect(jsonPath("$.email").value("test@example.com"));
   }
@@ -40,7 +42,7 @@ class UsersApiIntegrationTest extends BaseIntegrationTest {
   @Test
   void testGetUsers() throws Exception {
     mockMvc
-        .perform(get("/users"))
+        .perform(get("/users").with(jwt()))
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON));
   }
@@ -58,7 +60,11 @@ class UsersApiIntegrationTest extends BaseIntegrationTest {
     String accountJson = objectMapper.writeValueAsString(account);
     String userResponse =
         mockMvc
-            .perform(post("/users").contentType(MediaType.APPLICATION_JSON).content(userJson))
+            .perform(
+                post("/users")
+                    .with(jwt())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(userJson))
             .andReturn()
             .getResponse()
             .getContentAsString();
@@ -66,17 +72,23 @@ class UsersApiIntegrationTest extends BaseIntegrationTest {
     int userId = userNode.get("id").asInt();
     String accountResponse =
         mockMvc
-            .perform(post("/accounts").contentType(MediaType.APPLICATION_JSON).content(accountJson))
+            .perform(
+                post("/accounts")
+                    .with(jwt())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(accountJson))
             .andReturn()
             .getResponse()
             .getContentAsString();
     JsonNode accountNode = objectMapper.readTree(accountResponse);
     int accountId = accountNode.get("id").asInt();
     // Link user to account
-    mockMvc.perform(post("/users/" + userId + "/accounts/" + accountId)).andExpect(status().isOk());
+    mockMvc
+        .perform(post("/users/" + userId + "/accounts/" + accountId).with(jwt()))
+        .andExpect(status().isOk());
     // Unlink user from account
     mockMvc
-        .perform(delete("/users/" + userId + "/accounts/" + accountId))
+        .perform(delete("/users/" + userId + "/accounts/" + accountId).with(jwt()))
         .andExpect(status().isOk());
   }
 }

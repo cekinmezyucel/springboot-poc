@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.cekinmezyucel.springboot.poc.BaseIntegrationTest;
 import com.cekinmezyucel.springboot.poc.model.Account;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -28,7 +29,11 @@ class AccountsApiIntegrationTest extends BaseIntegrationTest {
     account.setIndustry("Finance");
     String accountJson = objectMapper.writeValueAsString(account);
     mockMvc
-        .perform(post("/accounts").contentType(MediaType.APPLICATION_JSON).content(accountJson))
+        .perform(
+            post("/accounts")
+                .with(jwt())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(accountJson))
         .andExpect(status().isCreated())
         .andExpect(jsonPath("$.name").value("AccountTest"));
   }
@@ -36,7 +41,7 @@ class AccountsApiIntegrationTest extends BaseIntegrationTest {
   @Test
   void testGetAccounts() throws Exception {
     mockMvc
-        .perform(get("/accounts"))
+        .perform(get("/accounts").with(jwt()))
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON));
   }
