@@ -23,6 +23,8 @@ public abstract class BaseIntegrationTest {
 
   static {
     postgres.start();
+
+    // Add shutdown hook to stop the PostgreSQL container after test suites finishes
     Runtime.getRuntime()
         .addShutdownHook(
             new Thread(
