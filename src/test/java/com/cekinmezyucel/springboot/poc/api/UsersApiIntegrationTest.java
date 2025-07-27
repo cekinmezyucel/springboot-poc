@@ -140,7 +140,7 @@ class UsersApiIntegrationTest extends BaseIntegrationTest {
       mockMvc
           .perform(post("/users/" + userId + "/accounts/" + accountId).with(jwt()))
           .andExpect(status().isOk());
-      // Unlink user from an account
+      // Unlink a user from an account
       mockMvc
           .perform(delete("/users/" + userId + "/accounts/" + accountId).with(jwt()))
           .andExpect(status().isOk());
