@@ -1,0 +1,9 @@
+#!/bin/sh
+
+# Run tests before commit
+./gradlew test
+RESULT=$?
+if [ $RESULT -ne 0 ]; then
+  echo "\nCommit aborted: Tests failed."
+  exit 1
+fi

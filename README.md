@@ -171,5 +171,24 @@
 
 ---
 
+## Git Pre-commit Hook: Run Tests Before Commit
+
+This project includes a pre-commit hook to ensure all tests pass before you commit code.
+
+**Setup (one-time per clone):**
+
+```sh
+git config core.hooksPath .githooks
+```
+
+This will make Git use the `.githooks/pre-commit` script automatically. The script runs `./gradlew test` and aborts the commit if any test fails.
+
+**Best practice:**
+
+- Always keep the pre-commit hook enabled to avoid pushing broken code.
+- If you need to skip the hook (not recommended), use `git commit --no-verify`.
+
+---
+
 - The `application-local.properties` file is preconfigured for local development.
 - You can override any environment variable in VS Code using the `env` block in `launch.json`.
