@@ -17,7 +17,9 @@ public class SecurityConfig {
 
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-    http.authorizeHttpRequests(
+    // CSRF is not needed for stateless and header authorization based JWT APIs.
+    http.csrf(csrf -> csrf.disable())
+        .authorizeHttpRequests(
             authz -> authz.requestMatchers("/health").permitAll().anyRequest().authenticated())
         .oauth2ResourceServer(
             oauth2 ->

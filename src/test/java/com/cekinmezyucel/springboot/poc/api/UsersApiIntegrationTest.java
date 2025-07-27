@@ -29,7 +29,6 @@ class UsersApiIntegrationTest extends BaseIntegrationTest {
 
   @Nested
   class GetUsersTests {
-
     @Test
     @DisplayName("Should return 401 if there is no JWT provided")
     void testGetUsersWithoutJwt() throws Exception {
@@ -69,62 +68,82 @@ class UsersApiIntegrationTest extends BaseIntegrationTest {
     }
   }
 
-  @Test
-  void testCreateUser() throws Exception {
-    User user = new User();
-    user.setEmail("test@example.com");
-    user.setName("Test");
-    user.setSurname("User");
-    String userJson = objectMapper.writeValueAsString(user);
-    mockMvc
-        .perform(
-            post("/users").with(jwt()).contentType(MediaType.APPLICATION_JSON).content(userJson))
-        .andExpect(status().isCreated())
-        .andExpect(jsonPath("$.email").value("test@example.com"));
+  @Nested
+  class CreateUserTests {
+    @Test
+    @DisplayName("Should return 401 if there is no JWT provided")
+    void testCreateUsersWithoutJwt() throws Exception {
+      User user = new User();
+      user.setEmail("test@example.com");
+      user.setName("Test");
+      user.setSurname("User");
+      String userJson = objectMapper.writeValueAsString(user);
+      mockMvc
+          .perform(post("/users").contentType(MediaType.APPLICATION_JSON).content(userJson))
+          .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @DisplayName("Should return 201 if JWT provided")
+    void testCreateUsersWithJwt() throws Exception {
+      User user = new User();
+      user.setEmail("test@example.com");
+      user.setName("Test");
+      user.setSurname("User");
+      String userJson = objectMapper.writeValueAsString(user);
+      mockMvc
+          .perform(
+              post("/users").with(jwt()).contentType(MediaType.APPLICATION_JSON).content(userJson))
+          .andExpect(status().isCreated())
+          .andExpect(jsonPath("$.email").value("test@example.com"));
+    }
   }
 
-  @Test
-  void testLinkAndUnlinkUserToAccount() throws Exception {
-    User user = new User();
-    user.setEmail("link@example.com");
-    user.setName("Link");
-    user.setSurname("User");
-    String userJson = objectMapper.writeValueAsString(user);
-    Account account = new Account();
-    account.setName("Account1");
-    account.setIndustry("Tech");
-    String accountJson = objectMapper.writeValueAsString(account);
-    String userResponse =
-        mockMvc
-            .perform(
-                post("/users")
-                    .with(jwt())
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(userJson))
-            .andReturn()
-            .getResponse()
-            .getContentAsString();
-    JsonNode userNode = objectMapper.readTree(userResponse);
-    int userId = userNode.get("id").asInt();
-    String accountResponse =
-        mockMvc
-            .perform(
-                post("/accounts")
-                    .with(jwt())
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(accountJson))
-            .andReturn()
-            .getResponse()
-            .getContentAsString();
-    JsonNode accountNode = objectMapper.readTree(accountResponse);
-    int accountId = accountNode.get("id").asInt();
-    // Link user to account
-    mockMvc
-        .perform(post("/users/" + userId + "/accounts/" + accountId).with(jwt()))
-        .andExpect(status().isOk());
-    // Unlink user from an account
-    mockMvc
-        .perform(delete("/users/" + userId + "/accounts/" + accountId).with(jwt()))
-        .andExpect(status().isOk());
+  @Nested
+  class LinkUserToAccountTests {
+    @Test
+    void testLinkAndUnlinkUserToAccount() throws Exception {
+      User user = new User();
+      user.setEmail("link@example.com");
+      user.setName("Link");
+      user.setSurname("User");
+      String userJson = objectMapper.writeValueAsString(user);
+      Account account = new Account();
+      account.setName("Account1");
+      account.setIndustry("Tech");
+      String accountJson = objectMapper.writeValueAsString(account);
+      String userResponse =
+          mockMvc
+              .perform(
+                  post("/users")
+                      .with(jwt())
+                      .contentType(MediaType.APPLICATION_JSON)
+                      .content(userJson))
+              .andReturn()
+              .getResponse()
+              .getContentAsString();
+      JsonNode userNode = objectMapper.readTree(userResponse);
+      int userId = userNode.get("id").asInt();
+      String accountResponse =
+          mockMvc
+              .perform(
+                  post("/accounts")
+                      .with(jwt())
+                      .contentType(MediaType.APPLICATION_JSON)
+                      .content(accountJson))
+              .andReturn()
+              .getResponse()
+              .getContentAsString();
+      JsonNode accountNode = objectMapper.readTree(accountResponse);
+      int accountId = accountNode.get("id").asInt();
+      // Link user to account
+      mockMvc
+          .perform(post("/users/" + userId + "/accounts/" + accountId).with(jwt()))
+          .andExpect(status().isOk());
+      // Unlink user from an account
+      mockMvc
+          .perform(delete("/users/" + userId + "/accounts/" + accountId).with(jwt()))
+          .andExpect(status().isOk());
+    }
   }
 }
