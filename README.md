@@ -14,19 +14,23 @@
 ## What We Achieved
 
 ### 1. **OpenAPI-Driven Backend**
+
 - API and model classes are generated from `openapi.yaml` using OpenAPI Generator.
 - All endpoints and models are type-safe and documented.
 
 ### 2. **Database & Migrations**
+
 - Uses PostgreSQL (Dockerized for local/dev).
 - Flyway for repeatable, versioned DB migrations.
 - Testcontainers for isolated, real DB in integration tests.
 
 ### 3. **Entities & Relationships**
+
 - JPA entities for `User` and `Account` with a many-to-many relationship.
 - Model classes (DTOs) are mapped cleanly from entities.
 
 ### 4. **Security**
+
 - OIDC/OAuth2 resource server (Spring Security).
 - All endpoints (except `/health`) require authentication.
 - Method-level security with custom roles (e.g., `poc.users.read`).
@@ -34,18 +38,21 @@
 - Security config matches production best practices.
 
 ### 5. **Integration Tests**
+
 - Use MockMvc and Testcontainers for full-stack integration tests.
 - Security is always enabled in tests—no shortcuts.
 - Test JWTs are generated with the correct roles/claims.
 - Static Testcontainers for fast test runs, with JVM shutdown hook for cleanup.
 
 ### 6. **Local OIDC Mock Provider**
+
 - Dockerized [mock-oauth2-server](https://github.com/navikt/mock-oauth2-server) for local token issuing.
 - Custom claims (including roles) are configured via UI.
 - Built-in debugger UI for manual token generation.
 - `application-local.properties` is preconfigured for local OIDC.
 
 ### 7. **Developer Experience**
+
 - One-command startup: `docker-compose up` for DB and OIDC.
 - Easy to get a real JWT for local API testing.
 - All config and usage is documented in `LOCAL_OIDC_README.md`.
@@ -114,6 +121,7 @@
 ---
 
 **Happy coding!**
+
 # springboot-poc
 
 ## Local Development with Docker Compose and PostgreSQL
