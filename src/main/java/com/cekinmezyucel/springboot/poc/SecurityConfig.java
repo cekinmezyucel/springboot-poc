@@ -8,7 +8,8 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
 
-import com.cekinmezyucel.springboot.poc.util.ApplicationConstants;
+import static com.cekinmezyucel.springboot.poc.util.ApplicationConstants.AUTHORITIES_CLAIM_NAME;
+import static com.cekinmezyucel.springboot.poc.util.ApplicationConstants.AUTHORITY_PREFIX;
 
 @Configuration
 @EnableMethodSecurity(jsr250Enabled = true)
@@ -28,9 +29,8 @@ public class SecurityConfig {
   public JwtAuthenticationConverter jwtAuthenticationConverter() {
     JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter =
         new JwtGrantedAuthoritiesConverter();
-    grantedAuthoritiesConverter.setAuthorityPrefix(ApplicationConstants.AUTHORITY_PREFIX);
-    grantedAuthoritiesConverter.setAuthoritiesClaimName(
-        ApplicationConstants.AUTHORITIES_CLAIM_NAME);
+    grantedAuthoritiesConverter.setAuthorityPrefix(AUTHORITY_PREFIX);
+    grantedAuthoritiesConverter.setAuthoritiesClaimName(AUTHORITIES_CLAIM_NAME);
     JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
     jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);
     return jwtAuthenticationConverter;

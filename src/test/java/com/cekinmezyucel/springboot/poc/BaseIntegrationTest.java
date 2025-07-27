@@ -8,7 +8,7 @@ import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.utility.DockerImageName;
 
-import com.cekinmezyucel.springboot.poc.util.ApplicationConstants;
+import static com.cekinmezyucel.springboot.poc.util.ApplicationConstants.AUTHORITY_PREFIX;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -46,6 +46,6 @@ public abstract class BaseIntegrationTest {
   }
 
   protected String withAuthorityPrefix(String roleKey) {
-    return ApplicationConstants.AUTHORITY_PREFIX + roleKey;
+    return AUTHORITY_PREFIX + roleKey;
   }
 }
