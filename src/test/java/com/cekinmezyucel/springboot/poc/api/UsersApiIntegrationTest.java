@@ -1,5 +1,7 @@
 package com.cekinmezyucel.springboot.poc.api;
 
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -26,14 +28,41 @@ class UsersApiIntegrationTest extends BaseIntegrationTest {
 
   private final ObjectMapper objectMapper = new ObjectMapper();
 
-  @Test
-  void testGetUsers() throws Exception {
-    mockMvc
-        .perform(
-            get("/users")
-                .with(jwt().authorities(new SimpleGrantedAuthority("ROLE_poc.users.read"))))
-        .andExpect(status().isOk())
-        .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+  @Nested
+  class GetUsersTests {
+
+    @Test
+    @DisplayName("Should return 401 if there is no JWT provided")
+    void testGetUsersWithoutJwt() throws Exception {
+      mockMvc.perform(get("/users")).andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @DisplayName("Should return 403 if JWT provided but no authorities provided")
+    void testGetUsersWithoutAuthorities() throws Exception {
+      mockMvc.perform(get("/users").with(jwt())).andExpect(status().isForbidden());
+    }
+
+    @Test
+    @DisplayName("Should return 200 if JWT has wrong authorities")
+    void testGetUsersWithWrongAuthorities() throws Exception {
+      mockMvc
+          .perform(
+              get("/users")
+                  .with(jwt().authorities(new SimpleGrantedAuthority("ROLE_poc.users.write"))))
+          .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @DisplayName("Should return 200 if JWT has correct authorities")
+    void testGetUsersWithCorrectAuthorities() throws Exception {
+      mockMvc
+          .perform(
+              get("/users")
+                  .with(jwt().authorities(new SimpleGrantedAuthority("ROLE_poc.users.read"))))
+          .andExpect(status().isOk())
+          .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+    }
   }
 
   @Test
@@ -89,7 +118,7 @@ class UsersApiIntegrationTest extends BaseIntegrationTest {
     mockMvc
         .perform(post("/users/" + userId + "/accounts/" + accountId).with(jwt()))
         .andExpect(status().isOk());
-    // Unlink user from account
+    // Unlink user from an account
     mockMvc
         .perform(delete("/users/" + userId + "/accounts/" + accountId).with(jwt()))
         .andExpect(status().isOk());
