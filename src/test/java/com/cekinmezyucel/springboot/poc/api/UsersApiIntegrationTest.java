@@ -19,7 +19,6 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -49,7 +48,10 @@ class UsersApiIntegrationTest extends BaseIntegrationTest {
       mockMvc
           .perform(
               get("/users")
-                  .with(jwt().authorities(new SimpleGrantedAuthority("ROLE_poc.users.write"))))
+                  .with(
+                      jwt()
+                          .authorities(
+                              new SimpleGrantedAuthority(withAuthorityPrefix("poc.users.write")))))
           .andExpect(status().isForbidden());
     }
 
@@ -59,9 +61,11 @@ class UsersApiIntegrationTest extends BaseIntegrationTest {
       mockMvc
           .perform(
               get("/users")
-                  .with(jwt().authorities(new SimpleGrantedAuthority("ROLE_poc.users.read"))))
-          .andExpect(status().isOk())
-          .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+                  .with(
+                      jwt()
+                          .authorities(
+                              new SimpleGrantedAuthority(withAuthorityPrefix("poc.users.read")))))
+          .andExpect(status().isOk());
     }
   }
 

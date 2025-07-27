@@ -8,6 +8,8 @@ import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.utility.DockerImageName;
 
+import com.cekinmezyucel.springboot.poc.util.ApplicationConstants;
+
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
@@ -41,5 +43,9 @@ public abstract class BaseIntegrationTest {
     registry.add("spring.datasource.username", postgres::getUsername);
     registry.add("spring.datasource.password", postgres::getPassword);
     registry.add("spring.datasource.driver-class-name", postgres::getDriverClassName);
+  }
+
+  protected String withAuthorityPrefix(String roleKey) {
+    return ApplicationConstants.AUTHORITY_PREFIX + roleKey;
   }
 }
