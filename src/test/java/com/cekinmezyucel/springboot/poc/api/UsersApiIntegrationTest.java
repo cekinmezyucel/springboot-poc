@@ -42,7 +42,7 @@ class UsersApiIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    @DisplayName("Should return 200 if JWT has wrong authorities")
+    @DisplayName("Should return 403 if JWT has wrong authorities")
     void testGetUsersWithWrongAuthorities() throws Exception {
       mockMvc
           .perform(
