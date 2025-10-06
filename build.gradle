@@ -54,8 +54,7 @@ tasks.named('openApiGenerate') {
 	modelPackage = "com.cekinmezyucel.springboot.poc.model"
 	invokerPackage = "com.cekinmezyucel.springboot.poc.invoker"
 	configOptions = [delegatePattern: "true", useJakartaEe: "true"]
-    globalProperties =[apis: "", models: "", supportingFiles: "ApiUtil.java"
-    ]
+    globalProperties =[apis: "", models: "", supportingFiles: "ApiUtil.java"]
 }
 
 tasks.named('compileJava') {
