@@ -6,13 +6,13 @@ import jakarta.annotation.security.RolesAllowed;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Service;
 
 import com.cekinmezyucel.springboot.poc.model.User;
 import com.cekinmezyucel.springboot.poc.service.UserService;
 
-@RestController
-public class UsersApiImpl implements UsersApi {
+@Service
+public class UsersApiImpl implements UsersApiDelegate {
   private final UserService userService;
 
   public UsersApiImpl(UserService userService) {

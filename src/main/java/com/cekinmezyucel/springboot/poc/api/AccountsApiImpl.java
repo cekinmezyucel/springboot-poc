@@ -4,13 +4,13 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Service;
 
 import com.cekinmezyucel.springboot.poc.model.Account;
 import com.cekinmezyucel.springboot.poc.service.AccountService;
 
-@RestController
-public class AccountsApiImpl implements AccountsApi {
+@Service
+public class AccountsApiImpl implements AccountsApiDelegate {
   private final AccountService accountService;
 
   public AccountsApiImpl(AccountService accountService) {
