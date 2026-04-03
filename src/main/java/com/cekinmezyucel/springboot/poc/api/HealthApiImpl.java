@@ -1,26 +1,31 @@
 package com.cekinmezyucel.springboot.poc.api;
 
-import org.springframework.boot.actuate.health.HealthEndpoint;
-import org.springframework.boot.actuate.health.Status;
+import java.util.List;
+
+import org.springframework.boot.health.contributor.HealthIndicator;
+import org.springframework.boot.health.contributor.Status;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
 public class HealthApiImpl implements HealthApiDelegate {
-  private final HealthEndpoint healthEndpoint;
+  private final List<HealthIndicator> healthIndicators;
 
-  public HealthApiImpl(HealthEndpoint healthEndpoint) {
-    this.healthEndpoint = healthEndpoint;
+  public HealthApiImpl(List<HealthIndicator> healthIndicators) {
+    this.healthIndicators = healthIndicators;
   }
 
   @Override
   public ResponseEntity<Void> getHealth() {
-    Status status = healthEndpoint.health().getStatus();
-    if (Status.UP.equals(status)) {
-      return ResponseEntity.status(HttpStatus.OK).build();
-    } else {
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-    }
+    boolean allUp =
+        healthIndicators.stream()
+            .map(HealthIndicator::health)
+            .map(health -> health != null ? health.getStatus() : Status.DOWN)
+            .allMatch(Status.UP::equals);
+
+    return allUp
+        ? ResponseEntity.status(HttpStatus.OK).build()
+        : ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
   }
 }
