@@ -5,7 +5,7 @@
 This is a **production-grade Spring Boot backend** project that demonstrates best practices for building secure, OpenAPI-driven REST APIs with robust local development and testing environments.
 
 ### Key Characteristics
-- **Primary Language**: Java 21
+- **Primary Language**: Java 25
 - **Framework**: Spring Boot 3.5.6
 - **Build Tool**: Gradle 
 - **Database**: PostgreSQL with Flyway migrations
@@ -74,7 +74,7 @@ This is a **production-grade Spring Boot backend** project that demonstrates bes
 ## Working with This Repository
 
 ### Prerequisites for Development
-1. **Java 21** (required)
+1. **Java 25** (required)
 2. **Docker & Docker Compose** (for local services)
 3. **Gradle** (wrapper included)
 
@@ -253,7 +253,7 @@ Create `.vscode/launch.json`:
 ### Common Issues
 
 #### Build Failures
-- Ensure Java 21 is installed and active
+- Ensure Java 25 is installed and active
 - Run `./gradlew clean build` for clean rebuild
 - Check OpenAPI spec syntax if generation fails
 
