@@ -30,7 +30,7 @@ dependencies {
 	implementation 'io.swagger.core.v3:swagger-annotations:2.2.48'
 	implementation 'jakarta.validation:jakarta.validation-api:3.1.1'
 	implementation 'org.openapitools:jackson-databind-nullable:0.2.10'
-	implementation 'org.postgresql:postgresql:42.7.10'
+	implementation 'org.postgresql:postgresql:42.7.11'
 
 	runtimeOnly 'org.flywaydb:flyway-database-postgresql'
 
