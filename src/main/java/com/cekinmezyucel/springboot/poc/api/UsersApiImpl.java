@@ -20,7 +20,7 @@ public class UsersApiImpl implements UsersApiDelegate {
   }
 
   @Override
-  @RolesAllowed("poc.users.read")
+  @RolesAllowed(Roles.USERS_READ)
   public ResponseEntity<List<User>> getUsers() {
     return ResponseEntity.ok(userService.getUsers());
   }
